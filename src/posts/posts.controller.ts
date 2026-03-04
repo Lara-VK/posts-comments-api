@@ -11,15 +11,17 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiResponse } from '../common/responses/api-response';
+import { Query } from '@nestjs/common';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  async findAll() {
-    const posts = await this.postsService.findAll();
-    return ApiResponse.success(posts);
+  async findAll(@Query('page') page = 1, @Query('limit') limit = 5) {
+    const result = await this.postsService.findAll(Number(page), Number(limit));
+
+    return ApiResponse.success(result);
   }
 
   @Get(':id')

@@ -16,8 +16,21 @@ export class PostsService {
     return this.postModel.create(dto);
   }
 
-  async findAll() {
-    return this.postModel.find().sort({ createdAt: -1 });
+  async findAll(page = 1, limit = 5) {
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.postModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+
+      this.postModel.countDocuments(),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string) {
