@@ -6,7 +6,9 @@ import { AppController } from './app.controller';
 
 @Module({
   imports: [
-MongooseModule.forRoot('mongodb+srv://admin:Admin123@cluster0.12kbmzq.mongodb.net/postsdb?retryWrites=true&w=majority'),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI || 'mongodb://localhost:27017/postsdb',
+    ),
     PostsModule,
     CommentsModule,
   ],
